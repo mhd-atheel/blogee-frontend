@@ -60,7 +60,16 @@ class _PostState extends State<Post> {
           ListTile(
             title:  Text(widget.userName),
             subtitle: Text(widget.location),
-            leading: Image.asset('assets/images/profile.png'),
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: SizedBox.fromSize(
+                size: const Size.fromRadius(25),
+                child: Image.network(
+                  widget.userProfileImage,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             trailing: const Icon(Icons.more_vert_outlined),
           ),
            Padding(

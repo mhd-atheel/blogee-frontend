@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:technical/variables.dart';
+import 'package:technical/views/createPostScreen.dart';
 import 'package:technical/views/homeScreen.dart';
 import 'package:technical/views/world.dart';
 
@@ -29,18 +30,15 @@ class _BottomRouteNavigationState extends State<BottomRouteNavigation> {
     // Here's an example using IndexedStack:
     return IndexedStack(
       index: currentIndex,
-      children: [
+      children: const [
         // Add your tab content widgets here
         // Example:
        // const DashBoard(),
 
-        const HomeScreen(),
-        const World(),
-        Container(
-          color: Colors.yellow,
-          child: const Center(child: Text('Tab 4')),
-        ),
-        const MyProfile(),
+        HomeScreen(),
+        World(),
+        CreatePostScreen(),
+        MyProfile(),
       ],
     );
   }
