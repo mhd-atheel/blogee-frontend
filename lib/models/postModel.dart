@@ -1,29 +1,29 @@
 class PostModel {
-  final String id;
+  final String? id;
   final String postname;
   final String location;
-  final int likecount;
-  final int commentcount;
-  final String userid;
-  final String username;
-  final String email;
-  final String createdAt;
-  final String userprofileimage;
-  final String postimage;
+  final int? likecount;
+  final int? commentcount;
+  final String? userid;
+  final String?username;
+  final String? email;
+  final String? createdAt;
+  final String? userprofileimage;
+  final String? postimage;
 
   PostModel(
       {
-        required this.id,
+         this.id,
       required this.postname,
       required this.location,
-      required this.likecount,
-      required this.commentcount,
-      required this.userid,
-      required this.username,
-      required this.email,
-      required this.createdAt,
-      required this.userprofileimage,
-      required this.postimage});
+       this.likecount,
+       this.commentcount,
+       this.userid,
+       this.username,
+       this.email,
+       this.createdAt,
+       this.userprofileimage,
+       this.postimage});
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return  PostModel(
@@ -43,17 +43,18 @@ class PostModel {
   }
   Map<dynamic, dynamic> toJson() {
     return {
-      'id': id,
+      // 'id': id,
       'postname':postname ,
       'location':location,
-      'likecount': likecount,
-      'commentcount': commentcount,
       'userid': userid,
-      'username': username,
-      'email':email ,
-      'createdAt': createdAt,
-      'userprofileimage': userprofileimage,
-      'postimage':postimage
+      'imageUrl': postimage,
+      // 'likecount': likecount,
+      // 'commentcount': commentcount,
+      // 'username': username,
+      // 'email':email ,
+      // 'createdAt': createdAt,
+      // 'userprofileimage': userprofileimage,
+      // 'postimage':postimage
     };
   }
 }

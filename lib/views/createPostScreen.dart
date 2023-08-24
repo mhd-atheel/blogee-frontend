@@ -1,8 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:technical/models/postModel.dart';
+import 'package:technical/services/postService.dart';
 
 import '../variables.dart';
 
@@ -17,6 +23,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool isLoading = false;
   File? _image;
   final imagePicker = ImagePicker();
+  String? downloadUrl;
+  String? id;
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  void getPrefs () async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      id = prefs.getString('id');
+    });
+  }
   Future imagePickerMethod(source) async{
     final pick =await imagePicker.pickImage(source: source);
     setState(() {
@@ -27,6 +43,31 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       //   showSnackBars("No File Selected", Duration(milliseconds: 400));
       // }
     });
+  }
+  Future<void>createPost (String downloadUrl) async {
+    final postModel = PostModel(
+        postname: descriptionController.text,
+        location: locationController.text,
+        userid: id,
+        postimage: downloadUrl
+    );
+    await PostService.createPost(postModel).whenComplete((){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Create Succuess"),)
+      );
+    });
+  }
+
+  Future<void> uploadImage () async{
+    Reference ref = FirebaseStorage.instance.ref().child(id!).child('posts');
+    await ref.putFile(_image!);
+    downloadUrl = await ref.getDownloadURL();
+    print(downloadUrl);
+  }
+ @override
+  void initState() {
+   getPrefs();
+    super.initState();
   }
 
   void _settingModalBottomSheet(context){
@@ -134,6 +175,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, top: 0),
                     child: TextFormField(
+                      controller: descriptionController,
                         decoration: const InputDecoration(
                           hintText: 'write..',
                           labelStyle: TextStyle(color: Colors.grey),
@@ -167,7 +209,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, top: 0),
                     child: TextFormField(
-
+                      controller: locationController,
                         decoration: const InputDecoration(
                           hintText: 'select location',
                           labelStyle: TextStyle(color: Colors.grey),
@@ -252,8 +294,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 height: 15,
               ),
               GestureDetector(
-                onTap: () {
-
+                onTap: () async {
+                  setState(() {
+                    isLoading =true;
+                  });
+                  uploadImage().then((value) {
+                     createPost(downloadUrl!).whenComplete(() {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    });
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15),

@@ -14,8 +14,8 @@ class Post extends StatefulWidget {
   final int commentCount;
   final String userId;
   final String createdAt;
-  final  postImage;
-  final  userProfileImage;
+  final postImage;
+  final userProfileImage;
    Post({
      super.key ,
      required this.userName,
@@ -86,7 +86,9 @@ class _PostState extends State<Post> {
                 const SizedBox(height: 10,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Image.network(widget.postImage!,width: MediaQuery.of(context).size.width,fit: BoxFit.fill,),
+                  child: Image.network(widget.postImage!,
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.fill,),
                 ),
               ],
             ),

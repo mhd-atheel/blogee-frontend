@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "770595506924",
+    "firebase_url": "https://blogee-2f337-default-rtdb.firebaseio.com",
+    "project_id": "blogee-2f337",
+    "storage_bucket": "blogee-2f337.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770595506924:android:df166aa7943bacad4133c9",
+        "android_client_info": {
+          "package_name": "com.example.technical"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770595506924-e6vu1sea2dkr772li6nkglob02550bmb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7C9dqrhZ7K4wFeT9BKxz3BIKrRRZeb0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770595506924-e6vu1sea2dkr772li6nkglob02550bmb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
