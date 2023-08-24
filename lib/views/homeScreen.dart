@@ -5,6 +5,8 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:technical/components/post.dart';
 import 'package:http/http.dart'as http;
+import 'package:technical/models/postModel.dart';
+import 'package:technical/services/postService.dart';
 
 import '../variables.dart';
 
@@ -46,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   @override
   void initState() {
-    fetchPost();
+    PostService.fetchPost();
     super.initState();
   }
 
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return  RefreshIndicator(
       onRefresh: ()async{
-         fetchPost();
+       setState(() {});
       },
       child: Scaffold(
         appBar: AppBar(
@@ -118,24 +120,53 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              ListView.builder(
-                   shrinkWrap: true,
-                  physics:const NeverScrollableScrollPhysics(),
-                  itemCount: posts.length,
-                  itemBuilder: (context,index){
-                    return Post(
-                      userName: posts[index]['username'],
-                      postName: posts[index]['postname'],
-                      location: posts[index]['location'],
-                      likeCount: posts[index]['likecount'],
-                      commentCount: posts[index]['commentcount'],
-                      userId: posts[index]['userid'],
-                      createdAt: posts[index]['createdAt'],
-                      userProfileImage: posts[index]['userprofileimage'],
-                      postImage: posts[index]['postimage'],
-                    );
+              FutureBuilder(
+                future: PostService.fetchPost(),
+                builder: (BuildContext context,AsyncSnapshot snapshot){
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return const Center(child: CircularProgressIndicator());
                   }
+                  return ListView(
+                    shrinkWrap: true,
+
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      ...snapshot.data!.map((e) =>  Post(
+                            userName: e.username,
+                            postName: e.postname,
+                            location: e.location,
+                            likeCount: e.likecount,
+                            commentCount: e.commentcount,
+                            userId: e.userid,
+                            createdAt: e.createdAt,
+                            userProfileImage: e.userprofileimage,
+                            postImage: e.postimage,
+                          )
+                      )
+                    ],
+                  );
+                }
+
               ),
+
+              // ListView.builder(
+              //      shrinkWrap: true,
+              //     physics:const NeverScrollableScrollPhysics(),
+              //     itemCount: posts.length,
+              //     itemBuilder: (context,index){
+              //       return Post(
+              //         userName: posts[index]['username'],
+              //         postName: posts[index]['postname'],
+              //         location: posts[index]['location'],
+              //         likeCount: posts[index]['likecount'],
+              //         commentCount: posts[index]['commentcount'],
+              //         userId: posts[index]['userid'],
+              //         createdAt: posts[index]['createdAt'],
+              //         userProfileImage: posts[index]['userprofileimage'],
+              //         postImage: posts[index]['postimage'],
+              //       );
+              //     }
+              // ),
               // Post(image: 'assets/images/lotus.jpg',),
               // Post(image: 'assets/images/profile.png',),
               // Post(image: 'assets/images/post2.png',),

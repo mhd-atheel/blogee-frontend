@@ -59,7 +59,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
 
   Future<void> uploadImage () async{
-    Reference ref = FirebaseStorage.instance.ref().child(id!).child('posts');
+    final  posttime = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference ref = FirebaseStorage.instance.ref().child('posts').child(id!).child(posttime);
     await ref.putFile(_image!);
     downloadUrl = await ref.getDownloadURL();
     print(downloadUrl);

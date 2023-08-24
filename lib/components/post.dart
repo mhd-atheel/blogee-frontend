@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -60,16 +61,31 @@ class _PostState extends State<Post> {
           ListTile(
             title:  Text(widget.userName),
             subtitle: Text(widget.location),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: SizedBox.fromSize(
-                size: const Size.fromRadius(25),
-                child: Image.network(
-                  widget.userProfileImage,
-                  fit: BoxFit.cover,
+            leading: CachedNetworkImage(
+              imageUrl:  widget.userProfileImage,
+              imageBuilder: (context, imageProvider) => Container(
+                height: 80,
+                width: 110,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
+            // leading: ClipRRect(
+            //   borderRadius: BorderRadius.circular(25),
+            //   child: SizedBox.fromSize(
+            //     size: const Size.fromRadius(25),
+            //     child: Image.network(
+            //       widget.userProfileImage,
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            // ),
             trailing: const Icon(Icons.more_vert_outlined),
           ),
            Padding(
@@ -80,18 +96,23 @@ class _PostState extends State<Post> {
               ],
             ),
           ),
-          if(widget.postImage != null)
-            Column(
-              children: [
-                const SizedBox(height: 10,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Image.network(widget.postImage!,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.fill,),
-                ),
-              ],
-            ),
+          // if(widget.postImage != null)
+          //   Column(
+          //     children: [
+          //       const SizedBox(height: 10,),
+          //       Padding(
+          //         padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          //         child: Image.network(widget.postImage!,
+          //           width: MediaQuery.of(context).size.width,
+          //           fit: BoxFit.fill,),
+          //       ),
+          //     ],
+          //   ),
+          widget.postImage !=null ?
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Image.network(widget.postImage),
+              ):Container(),
           const SizedBox(height: 20,),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),

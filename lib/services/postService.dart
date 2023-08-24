@@ -19,7 +19,7 @@ class PostService{
     );
 
     if (response.statusCode == 200) {
-      print('Post Created successfully');
+
     }
     return 'Failed to register user';
     // final users = json.map((e) {
@@ -27,4 +27,35 @@ class PostService{
     // }).toList();
 
   }
+
+  static Future<List<PostModel>> fetchPost() async {
+    final url = Variables.basePostUri+Variables.getPost;
+    final uri = Uri.parse(url);
+    var data = {
+      "type": "all"
+    };
+    final response = await http.post(uri,
+      body: jsonEncode(data) ,
+        headers: {"Content-Type":"application/json"}
+    );
+
+    final body = response.body;
+    final List<dynamic> json = await jsonDecode(body);
+    if(response.statusCode ==200){
+    return json.map(((e) => PostModel.fromJson(e))).toList();
+
+    }else{
+      throw Exception(response.reasonPhrase);
+    }
+    // final posts =  json.map((e) {
+    //   return PostModel.fromJson(e);
+    // }).toList();
+    // print(posts);
+    // return posts;
+
+  }
+
+
 }
+
+
