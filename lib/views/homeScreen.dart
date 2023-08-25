@@ -132,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       ...snapshot.data!.map((e) =>  Post(
+                            id: e.id,
                             userName: e.username,
                             postName: e.postname,
                             location: e.location,

@@ -11,6 +11,7 @@ class Variables {
     // Base user Url
     static var baseUserUri = 'http://192.168.8.101:8000/api/users/';
     static var basePostUri = 'http://192.168.8.101:8000/api/posts/';
+    static var baseLikeUri = 'http://192.168.8.101:8000/api/likes/';
 
     //User end points
     static var getUsers = 'get-user';
@@ -18,6 +19,8 @@ class Variables {
     static var signUpUser = 'create-user';
     static var getPost = 'get-post';
     static var createPost = 'create-post';
+    static var createLike = 'create-like';
+    static var deleteLike = 'delete-like';
 
 
 }
