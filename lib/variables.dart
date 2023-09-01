@@ -8,10 +8,13 @@ class Variables {
     final String emuIp = '10.0.2.2:8000';
     //for android device =>  192.168.8.100:8000
     String phoneIp = '192.168.8.101:8000';
+
+    final String deploy = 'https://blogee-app.onrender.com/';
+
     // Base user Url
-    static var baseUserUri = 'http://192.168.8.101:8000/api/users/';
-    static var basePostUri = 'http://192.168.8.101:8000/api/posts/';
-    static var baseLikeUri = 'http://192.168.8.101:8000/api/likes/';
+    static var baseUserUri = 'https://blogee-app.onrender.com/api/users/';
+    static var basePostUri = 'https://blogee-app.onrender.com/api/posts/';
+    static var baseLikeUri = 'https://blogee-app.onrender.com/api/likes/';
 
     //User end points
     static var getUsers = 'get-user';

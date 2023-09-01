@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:technical/testScreen.dart';
 import 'package:technical/views/authScreen.dart';
 import 'package:technical/views/bottomRouteNavigation.dart';
 import 'package:technical/views/homeScreen.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white
       ),
 
-      home: const SplashScreen(),
+      home: const TestScreen(),
     );
   }
 }
