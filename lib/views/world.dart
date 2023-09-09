@@ -1,12 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:technical/models/userModel.dart';
+import 'package:technical/provider/providers.dart';
 import 'package:technical/variables.dart';
 
-class World extends StatelessWidget {
+class World extends ConsumerWidget {
   const World({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context , ref) {
+   final userData = ref.watch(userDataProvider);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -57,22 +62,52 @@ class World extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20,),
-              ListView.builder(
-                  itemCount: 15,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder:(context,index){
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 10,right: 10),
-                      child: ListTile(
-                        title: const Text('Mohamed Atheel'),
-                        subtitle: const Text("Daily quotes"),
-                        leading: Image.asset('assets/images/profile.png'),
-                        trailing: const Icon(Icons.person_add_alt),
-                      ),
+              userData.when(
+                  data: (data){
+                    List<UserModel> userList = data!.map((e) => e).toList();
+                    return ListView.builder(
+                        itemCount: userList.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context ,index){
+                          return ListTile(
+                            title:  Text(userList[index].username ?? ''),
+                            subtitle:  Text(userList[index].email),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(22),
+                              child: SizedBox.fromSize(
+                                size: const Size.fromRadius(22), // Image radius
+                                child: CachedNetworkImage(
+                                  imageUrl: userList[index].profileImage ?? '',
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    height: 80,
+                                    width: 110,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  placeholder: (context, url) => const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error)
+                                  => Image.asset('assets/images/profile.png'),
+                                ),
+                              ),
+                            ),
+                            trailing: const Icon(Icons.person_add_alt),
+                          );
+                        }
                     );
-                  }
-              )
+                  },
+                  error: (error, s) => Text(error.toString()),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  )
+              ),
+
             ],
           ),
         ),

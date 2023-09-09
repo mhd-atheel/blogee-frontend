@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:technical/models/userModel.dart';
@@ -7,16 +8,22 @@ import 'package:technical/variables.dart';
 
 class UserServices {
 
-  static Future<List<UserModel>> fetchUser() async {
+   Future<List<UserModel>?> fetchUser() async {
     final url = Variables.baseUserUri+Variables.getUsers;
     final uri = Uri.parse(url);
     final response = await http.get(uri);
     final body = response.body;
-    final json = jsonDecode(body) as List<dynamic>;
-    final users = json.map((e) {
-      return UserModel.fromJson(e);
-    }).toList();
-    return users;
+
+    if (response.statusCode == 200){
+      final json = jsonDecode(body) as List<dynamic>;
+      final users = json.map((e) {
+        return UserModel.fromJson(e);
+      }).toList();
+      return users;
+    }
+
+    return null;
+
   }
 
   static Future<String> loginUser(UserModel userModel) async {
@@ -83,6 +90,8 @@ class UserServices {
 
 
 }
+
+final userProvider = Provider<UserServices>((ref) => UserServices());
 
 
 

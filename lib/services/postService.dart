@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:technical/models/postModel.dart';
 
@@ -28,7 +29,8 @@ class PostService{
 
   }
 
-  static Future<List<PostModel>> fetchPost() async {
+
+   Future<List<PostModel>> fetchPost() async {
     final url = Variables.basePostUri+Variables.getPost;
     final uri = Uri.parse(url);
     var data = {
@@ -57,5 +59,6 @@ class PostService{
 
 
 }
+  final postProvider=Provider<PostService>((ref)=>PostService());
 
 
