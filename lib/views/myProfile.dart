@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:technical/components/post.dart';
 import 'package:technical/provider/providers.dart';
 import 'package:technical/variables.dart';
+import 'package:technical/views/authScreen.dart';
+import 'package:technical/views/editProfileScreen.dart';
 
 import '../models/postModel.dart';
 
@@ -32,6 +36,7 @@ class MyProfileState extends ConsumerState<MyProfile> {
   @override
   void initState() {
     getPrefs();
+
     super.initState();
   }
 
@@ -41,6 +46,8 @@ class MyProfileState extends ConsumerState<MyProfile> {
     return RefreshIndicator(
       onRefresh: () async {
         getPrefs();
+
+        ref.refresh(postDataByIdProvider);
       },
       child: Scaffold(
         body: SingleChildScrollView(
@@ -83,7 +90,12 @@ class MyProfileState extends ConsumerState<MyProfile> {
                   IconButton(
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
-                        prefs.clear().whenComplete(() => print("Logout"));
+                        prefs.clear().whenComplete(
+                                () {
+                                  Get.offAll(const AuthScreen());
+                                  print("Logout");
+                                }
+                        );
                       },
                       icon: const FaIcon(
                         FontAwesomeIcons.arrowRightFromBracket,
@@ -93,7 +105,10 @@ class MyProfileState extends ConsumerState<MyProfile> {
                     width: 10,
                   ),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to( EditProfileScreen());
+
+                      },
                       icon: FaIcon(
                         FontAwesomeIcons.penToSquare,
                         color: Variables.orangeColor,
@@ -382,38 +397,89 @@ class MyProfileState extends ConsumerState<MyProfile> {
 
               if (tabIndex == false)
                 Column(
+                  
                   children: [
-                    postData.when(
-                        data: (data) {
-                          List<PostModel> postList =
-                              data.map((e) => e).toList();
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: postList.length,
-                              itemBuilder: (context, index) {
-                                return Post(
-                                    id: postList[index].id ?? '',
-                                    userName: postList[index].username ?? '',
-                                    postName: postList[index].postname ?? '',
-                                    location: postList[index].location ?? '',
-                                    likeCount: postList[index].likecount ?? 0,
-                                    commentCount: postList[index].commentcount ?? 0,
-                                    userId: postList[index].userid ?? '',
-                                    createdAt: postList[index].createdAt ?? '',
-                                    postImage: postList[index].postimage ?? '' ,
-                                    userProfileImage: postList[index].userprofileimage ?? '');
-                              });
-                        },
-                        error: (error, s) => Text(error.toString()),
-                        loading: () => const Center(
-                              child: CircularProgressIndicator(),
-                            ))
+                      postData.when(
+                          data: (data) {
+                            List<PostModel> postList =
+                            data.map((e) => e).toList();
+                            if(postList.isEmpty) {
+                              return   Column(
+                                children: [
+                                  const SizedBox(height: 50,),
+                                  const Center(
+                                    child: Text(
+                                      "No Blogs posted here",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                      onPressed: () async {
+                                        ref.refresh(postDataByIdProvider);
+                                      },
+                                      icon:  FaIcon(
+                                        FontAwesomeIcons.arrowRotateRight,
+                                        color: Variables.orangeColor,
+                                        size: 40,
+                                      )),
+                                  const Center(
+                                    child: Text(
+                                      "Refresh the Page",
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: postList.length,
+                                itemBuilder: (context, index) {
+                                  return Post(
+                                      id: postList[index].id ?? '',
+                                      userName: postList[index].username ?? '',
+                                      postName: postList[index].postname ?? '',
+                                      location: postList[index].location ?? '',
+                                      likeCount: postList[index].likecount ?? 0,
+                                      commentCount: postList[index].commentcount ?? 0,
+                                      userId: postList[index].userid ?? '',
+                                      createdAt: postList[index].createdAt ?? '',
+                                      postImage: postList[index].postimage ?? '' ,
+                                      userProfileImage: postList[index].userprofileimage ?? '');
+                                });
+                          },
+                          error: (error, s) => Text(error.toString()),
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          )),
+
+
+
+
                   ],
                 ),
               if (tabIndex == true)
-                const Center(
-                  child: Text("Saved Blogs"),
+                const Column(
+                  children: [
+                    SizedBox(height: 50,),
+                    Center(
+                      child: Text(
+                        "No Blogs Saved here",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
                 )
             ],
           ),

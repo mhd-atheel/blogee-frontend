@@ -140,7 +140,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
