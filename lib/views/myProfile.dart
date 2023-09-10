@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:technical/components/post.dart';
+import 'package:technical/provider/providers.dart';
 import 'package:technical/variables.dart';
 
-class MyProfile extends StatefulWidget {
+import '../models/postModel.dart';
+
+class MyProfile extends ConsumerStatefulWidget {
   const MyProfile({super.key});
 
   @override
-  State<MyProfile> createState() => _MyProfileState();
+  MyProfileState createState() => MyProfileState();
 }
 
-class _MyProfileState extends State<MyProfile> {
+class MyProfileState extends ConsumerState<MyProfile> {
   bool tabIndex = false;
   String? username;
   String? email;
   String? id;
-  void getPrefs () async{
+  void getPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       username = prefs.getString('username');
@@ -24,6 +28,7 @@ class _MyProfileState extends State<MyProfile> {
       id = prefs.getString('id');
     });
   }
+
   @override
   void initState() {
     getPrefs();
@@ -32,9 +37,10 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final postData = ref.watch(postDataByIdProvider);
     return RefreshIndicator(
-      onRefresh: () async{
-         getPrefs();
+      onRefresh: () async {
+        getPrefs();
       },
       child: Scaffold(
         body: SingleChildScrollView(
@@ -53,7 +59,7 @@ class _MyProfileState extends State<MyProfile> {
                     Positioned(
                       bottom: -70,
                       child: Center(
-                        child:  ClipRRect(
+                        child: ClipRRect(
                           borderRadius: BorderRadius.circular(70),
                           child: SizedBox.fromSize(
                             size: const Size.fromRadius(70),
@@ -67,89 +73,111 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                       ),
                     )
-                  ]
+                  ]),
+              const SizedBox(
+                height: 10,
               ),
-              const SizedBox(height: 10,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                      onPressed: ()async{
+                      onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
                         prefs.clear().whenComplete(() => print("Logout"));
                       },
-                      icon: const FaIcon(FontAwesomeIcons.arrowRightFromBracket,color: Colors.red,)),
-                  const SizedBox(width: 10,),
+                      icon: const FaIcon(
+                        FontAwesomeIcons.arrowRightFromBracket,
+                        color: Colors.red,
+                      )),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   IconButton(
-                      onPressed: (){
-
-                      },
-                      icon: FaIcon(FontAwesomeIcons.penToSquare,color: Variables.orangeColor,)),
-
+                      onPressed: () {},
+                      icon: FaIcon(
+                        FontAwesomeIcons.penToSquare,
+                        color: Variables.orangeColor,
+                      )),
                 ],
               ),
-              const SizedBox(height: 20,),
-               Row(
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(username != null? username!:'',style: const TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500
-                  ),textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false,applyHeightToLastDescent: false),
+                  Text(
+                    username != null ? username! : '',
+                    style: const TextStyle(
+                        fontSize: 25, fontWeight: FontWeight.w500),
+                    textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false),
                   )
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(email != null? email!:'',style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    color: Variables.blueColor
-                  ),)
+                  Text(
+                    email != null ? email! : '',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Variables.blueColor),
+                  )
                 ],
               ),
-               const Padding(
-                 padding: EdgeInsets.symmetric(horizontal: 15.0),
-                 child: Row(
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Center(
-                        child: Text("Lorem Ipsum is simply dsds dummy text of the printing and industry.",style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500
-                        ),textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false,applyHeightToLastDescent: false),
+                        child: Text(
+                          "Lorem Ipsum is simply dsds dummy text of the printing and industry.",
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.w500),
+                          textHeightBehavior: TextHeightBehavior(
+                              applyHeightToFirstAscent: false,
+                              applyHeightToLastDescent: false),
                         ),
                       ),
                     )
                   ],
+                ),
               ),
-               ),
-              const SizedBox(height: 15,),
-               const Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              const SizedBox(
+                height: 15,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Blogs",style: TextStyle(
+                          Text(
+                            "Blogs",
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-
-                          ),)
+                            ),
+                          )
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("05",style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-
-                          ),)
+                          Text(
+                            "05",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
                         ],
                       ),
                     ],
@@ -159,21 +187,25 @@ class _MyProfileState extends State<MyProfile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Followers",style: TextStyle(
+                          Text(
+                            "Followers",
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-
-                          ),)
+                            ),
+                          )
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("1024",style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-
-                          ),)
+                          Text(
+                            "1024",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
                         ],
                       ),
                     ],
@@ -183,21 +215,25 @@ class _MyProfileState extends State<MyProfile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Followings",style: TextStyle(
+                          Text(
+                            "Followings",
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-
-                          ),)
+                            ),
+                          )
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("1200",style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-
-                          ),)
+                          Text(
+                            "1200",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
                         ],
                       ),
                     ],
@@ -207,21 +243,25 @@ class _MyProfileState extends State<MyProfile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Likes",style: TextStyle(
+                          Text(
+                            "Likes",
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-
-                          ),)
+                            ),
+                          )
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("2356",style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-
-                          ),)
+                          Text(
+                            "2356",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
                         ],
                       ),
                     ],
@@ -231,111 +271,150 @@ class _MyProfileState extends State<MyProfile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Saved",style: TextStyle(
+                          Text(
+                            "Saved",
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-
-                          ),)
+                            ),
+                          )
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("15",style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-
-                          ),)
+                          Text(
+                            "15",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
                         ],
                       ),
                     ],
                   ),
-
-
-
                 ],
               ),
-              const SizedBox(height: 10,),
-               Row(
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-                        tabIndex=false;
+                        tabIndex = false;
                       });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-
-                        Text("Blogs",style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Variables.blueColor
-                        ),textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false,applyHeightToLastDescent: false),
+                        Text(
+                          "Blogs",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Variables.blueColor),
+                          textHeightBehavior: const TextHeightBehavior(
+                              applyHeightToFirstAscent: false,
+                              applyHeightToLastDescent: false),
                         )
                       ],
                     ),
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-                        tabIndex=true;
+                        tabIndex = true;
                       });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Saved",style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          color: Variables.blueColor
-                        ),textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false,applyHeightToLastDescent: false),
+                        Text(
+                          "Saved",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Variables.blueColor),
+                          textHeightBehavior: const TextHeightBehavior(
+                              applyHeightToFirstAscent: false,
+                              applyHeightToLastDescent: false),
                         )
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10,),
-               Stack(
+              const SizedBox(
+                height: 10,
+              ),
+              Stack(
                 children: [
                   Container(
                     height: 1.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 15),// Adjust the height as needed
-                    width: MediaQuery.of(context).size.width, // Adjust the width to decrease the divider's width
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 15), // Adjust the height as needed
+                    width: MediaQuery.of(context)
+                        .size
+                        .width, // Adjust the width to decrease the divider's width
                     color: Colors.grey,
                   ),
                   Row(
-                    mainAxisAlignment: tabIndex ==false? MainAxisAlignment.start:MainAxisAlignment.end,
+                    mainAxisAlignment: tabIndex == false
+                        ? MainAxisAlignment.start
+                        : MainAxisAlignment.end,
                     children: [
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 15),// Adjust the height as needed
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 15), // Adjust the height as needed
                         height: 2.0, // Adjust the height as needed
-                        width: MediaQuery.of(context).size.width/2.5, // Adjust the width to decrease the divider's width
+                        width: MediaQuery.of(context).size.width /
+                            2.5, // Adjust the width to decrease the divider's width
                         color: Variables.blueColor,
                       ),
                     ],
                   )
-
                 ],
               ),
-              const SizedBox(height: 10,),
-              if(tabIndex ==false)
+
+              if (tabIndex == false)
                 Column(
                   children: [
-                    // Post(image: 'assets/images/post2.png',),
-                    // Post(image: 'assets/images/post.jpeg'),
-                    // Post(),
+                    postData.when(
+                        data: (data) {
+                          List<PostModel> postList =
+                              data.map((e) => e).toList();
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: postList.length,
+                              itemBuilder: (context, index) {
+                                return Post(
+                                    id: postList[index].id ?? '',
+                                    userName: postList[index].username ?? '',
+                                    postName: postList[index].postname ?? '',
+                                    location: postList[index].location ?? '',
+                                    likeCount: postList[index].likecount ?? 0,
+                                    commentCount: postList[index].commentcount ?? 0,
+                                    userId: postList[index].userid ?? '',
+                                    createdAt: postList[index].createdAt ?? '',
+                                    postImage: postList[index].postimage ?? '' ,
+                                    userProfileImage: postList[index].userprofileimage ?? '');
+                              });
+                        },
+                        error: (error, s) => Text(error.toString()),
+                        loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ))
                   ],
                 ),
-              if(tabIndex==true)
+              if (tabIndex == true)
                 const Center(
-                 child: Text("Saved Blogs"),
+                  child: Text("Saved Blogs"),
                 )
-
-
             ],
           ),
         ),

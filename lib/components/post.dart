@@ -128,7 +128,7 @@ class _PostState extends State<Post> {
                               fit: BoxFit.fill,),
                           ),
                   placeholder: (context, url) => const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 )
               : Container(),
           const SizedBox(

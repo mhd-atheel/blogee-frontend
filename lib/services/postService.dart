@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:technical/models/postModel.dart';
 
 import '../variables.dart';
@@ -45,6 +46,35 @@ class PostService{
     final List<dynamic> json = await jsonDecode(body);
     if(response.statusCode ==200){
     return json.map(((e) => PostModel.fromJson(e))).toList();
+
+    }else{
+      throw Exception(response.reasonPhrase);
+    }
+    // final posts =  json.map((e) {
+    //   return PostModel.fromJson(e);
+    // }).toList();
+    // print(posts);
+    // return posts;
+
+  }
+
+  Future<List<PostModel>> fetchPostByUserId() async {
+    const url = Variables.basePostUri+Variables.getPostByUserId;
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    final uri = Uri.parse(url);
+    var data = {
+      "userid": preferences.getString('id')
+    };
+    final response = await http.post(uri,
+        body: jsonEncode(data) ,
+        headers: {"Content-Type":"application/json"}
+    );
+
+    final body = response.body;
+    final List<dynamic> json = await jsonDecode(body);
+    if(response.statusCode ==200){
+      return json.map(((e) => PostModel.fromJson(e))).toList();
 
     }else{
       throw Exception(response.reasonPhrase);

@@ -12,18 +12,19 @@ class Variables {
     final String deploy = 'https://blogee-app.onrender.com/';
 
     // Base user Url
-    static var baseUserUri = 'https://blogee-app.onrender.com/api/users/';
-    static var basePostUri = 'https://blogee-app.onrender.com/api/posts/';
-    static var baseLikeUri = 'https://blogee-app.onrender.com/api/likes/';
+    static const baseUserUri = 'https://blogee-app.onrender.com/api/users/';
+    static const basePostUri = 'https://blogee-app.onrender.com/api/posts/';
+    static const baseLikeUri = 'https://blogee-app.onrender.com/api/likes/';
 
     //User end points
-    static var getUsers = 'get-user';
-    static var loginUser = 'login-user';
-    static var signUpUser = 'create-user';
-    static var getPost = 'get-post';
-    static var createPost = 'create-post';
-    static var createLike = 'create-like';
-    static var deleteLike = 'delete-like';
+    static const getUsers = 'get-user';
+    static const loginUser = 'login-user';
+    static const signUpUser = 'create-user';
+    static const getPost = 'get-post';
+    static const getPostByUserId = 'get-post-by-user';
+    static const createPost = 'create-post';
+    static const createLike = 'create-like';
+    static const deleteLike = 'delete-like';
 
 
 }

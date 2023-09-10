@@ -7,9 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:technical/components/post.dart';
 import 'package:http/http.dart'as http;
 import 'package:technical/models/postModel.dart';
-import 'package:technical/provider/providers.dart';
+
 import 'package:technical/services/postService.dart';
 
+import '../provider/providers.dart';
 import '../variables.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -31,7 +32,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>{
   List posts = [];
 
   Future<void>fetchPost() async {
-    final url = Variables.basePostUri+Variables.getPost;
+    const url = Variables.basePostUri+Variables.getPost;
     final uri = Uri.parse(url);
     var data = {
       "type": "all"
@@ -140,7 +141,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>{
                               commentCount: postList[index].commentcount ?? 0,
                               userId: postList[index].userid ?? '',
                               createdAt: postList[index].createdAt ?? '',
-                              postImage: postList[index].postimage ?? '',
+                              postImage: postList[index].postimage,
                               userProfileImage: postList[index].userprofileimage ?? ''
                           ) ;
                         } ) ;
